@@ -1,0 +1,36 @@
+.text {
+  margin: 0;
+  position: absolute;
+  top:5%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+ng-sidebar-container{
+  height: 100vh;
+}
+::ng-deep .ng-sidebar{
+  background-color: steelblue;
+  width : 100%;
+  padding: 2em 3em;
+  box-shadow: 0 0 2.5em rgba(85,85,85,0.5);
+}
+
+.col {
+  margin-top: 10%;
+  list-style-type: none;
+  border: 2px inset black;
+  border-radius: 10px;
+  box-shadow: 6px 6px 0px black;
+  background-color: aliceblue;
+  text-align: center;
+  cursor: pointer;
+
+
+}
+
+header{
+  background-color: steelblue;
+  padding: 20px;
+}
+
