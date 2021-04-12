@@ -47,6 +47,4 @@ export class TableInfComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toUpperCase();
   }
 
-
-
 }

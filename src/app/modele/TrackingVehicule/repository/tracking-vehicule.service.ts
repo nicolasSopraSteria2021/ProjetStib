@@ -28,21 +28,6 @@ export class TrackingVehiculeService implements TrackingVehiculeRepository{
   getCountDelayFromTram(dateObs:string): Observable<number> {
     return this.http.get<number>(TrackingVehiculeService.URL+'/delayTram/'+dateObs);
   }
-
-  //recupere le temps total de retard de chaque vehicule
-
-  getTimeDelayFromBus(dateObs:string): Observable<number> {
-    return this.http.get<number>(TrackingVehiculeService.URL+'/TimeDelayBus/'+dateObs);
-  }
-
-  getTimeDelayFromMetro(dateObs: string): Observable<number> {
-    return this.http.get<number>(TrackingVehiculeService.URL+'/TimeDelayMetro/'+dateObs);
-  }
-
-  getTimeDelayFromTram(dateObs: string): Observable<number> {
-    return this.http.get<number>(TrackingVehiculeService.URL+'/TimeDelayTram/'+dateObs);
-  }
-
 //recupere le nombre de vehicule non en retard
   getCountNotDelayFromBus(dateObs: string): Observable<number> {
     return this.http.get<number>(TrackingVehiculeService.URL+'/notDelayBus/'+dateObs);
@@ -58,15 +43,15 @@ export class TrackingVehiculeService implements TrackingVehiculeRepository{
 
 
 //recupere les infos de tout les vehicules en retards
-  getInfoForWarning(): Observable<TrackingVehiculeList> {
+  /*getInfoForWarning(): Observable<TrackingVehiculeList> {
     return this.http.get<TrackingVehiculeList>(TrackingVehiculeService.URL+'/InfoWaring');
-  }
+  } */
   //recupere la date et le nombre de retard en fonction du type de données
-  getInfoForTable(vehiculeType: number): Observable<TrackingVehiculeForTable[]> {
-    return this.http.get<TrackingVehiculeForTable[]>(TrackingVehiculeService.URL+'/InfoTable/'+vehiculeType);
+  getInfoForTable(vehiculeType: string, value: any): Observable<TrackingVehiculeForTable[]> {
+    return this.http.get<TrackingVehiculeForTable[]>(TrackingVehiculeService.URL+'/InfoTable/'+vehiculeType+'/'+value);
   }
 //recupere les infos de la ligne la plus en retard
-  GetInfoForMostDelay(vehiculeType: number): Observable<InfoMostDelay> {
-    return this.http.get<InfoMostDelay>(TrackingVehiculeService.URL+'/InfoMostDelay/'+vehiculeType);
+  GetInfoForMostDelay(vehiculeType: string, value: any): Observable<InfoMostDelay> {
+    return this.http.get<InfoMostDelay>(TrackingVehiculeService.URL+'/InfoMostDelay/'+vehiculeType+'/'+value);
   }
 }

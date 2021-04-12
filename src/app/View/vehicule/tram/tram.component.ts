@@ -7,7 +7,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TramComponent implements OnInit {
 
-  vehicule_type : number = 2;
+  vehicule_type : string = "Tram";
   constructor() { }
 
   ngOnInit(): void {

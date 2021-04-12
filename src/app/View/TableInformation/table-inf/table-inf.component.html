@@ -20,7 +20,7 @@
 
   <ng-container matColumnDef="category">
     <th mat-header-cell *matHeaderCellDef> Category </th>
-    <td mat-cell *matCellDef="let element"> {{element.category}} </td>
+    <td mat-cell *matCellDef="let element"> {{element.category.toLowerCase() | titlecase}} </td>
   </ng-container>
 
   <ng-container matColumnDef="LineNumber">
@@ -31,7 +31,7 @@
 
   <ng-container matColumnDef="Station_departure">
     <th mat-header-cell *matHeaderCellDef> Station departure </th>
-    <td mat-cell *matCellDef="let element "> {{element.stationDeparture}} </td>
+    <td mat-cell *matCellDef="let element "> {{element.stationDeparture.toLowerCase() | titlecase}} </td>
   </ng-container>
 
 
@@ -39,7 +39,7 @@
 
   <ng-container matColumnDef="Station_Arrival">
     <th mat-header-cell *matHeaderCellDef> Destination </th>
-    <td mat-cell *matCellDef="let element"> {{element.stationArrival}} </td>
+    <td mat-cell *matCellDef="let element"> {{element.stationArrival.toLowerCase() | titlecase}} </td>
   </ng-container>
 
 

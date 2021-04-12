@@ -7,7 +7,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MetroComponent implements OnInit {
 
-  vehicule_type : number = 1;
+  vehicule_type : string ="Metro";
   constructor() { }
 
   ngOnInit(): void {

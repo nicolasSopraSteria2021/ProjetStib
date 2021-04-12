@@ -6,12 +6,15 @@ import {LineForecast} from '../types/line-forecast';
 export interface LineRepository {
 
   //methode qui renvoies une liste de Ligne pour le barChart
-  getLineChart(vehiculeType : number):Observable<Line[]>;
+  getLineChart(vehiculeType: string, value: any):Observable<Line[]>;
 
   //recupere les numeros de ligne en fonction de la category du vehicule
-  getLineNumberFromCategory(vehiculeType:number): Observable<number>;
+  getLineNumberFromCategory(vehiculeType: string): Observable<number>;
 
   //recupere les previsions des retards
-  getForecastFromLine(lineNumber:number): Observable<LineForecast[]>;
+  getForecastFromLine(lineNumber: number,vehiculeType:string,monthNumber:number): Observable<LineForecast[]>;
 
+  getMonthFromDb() : Observable<number>;
+
+  getYearsFromDb() : Observable<any>;
 }

@@ -53,7 +53,7 @@ export class AccueilComponent implements OnInit {
 
   ngOnInit(): void {
     this.setGraphic();
-    this.getInfoForWarning();
+    //this.getInfoForWarning();
   }
 
   setGraphic() {
@@ -122,7 +122,7 @@ export class AccueilComponent implements OnInit {
     });
   }
 
-  getTimeDelayFrombus(dateOb: string) {
+ /* getTimeDelayFrombus(dateOb: string) {
 
     this.TrackingvehiculeService.getTimeDelayFromBus(dateOb).subscribe(timeDelay => {
       this.timeDelayBus = timeDelay;
@@ -142,7 +142,7 @@ export class AccueilComponent implements OnInit {
       this.timeDelayTram = timeDelay;
     });
   }
-
+*/
   //NOT DELAY
   getCountNotDelayBus(dateObser: string) {
     this.TrackingvehiculeService.getCountNotDelayFromBus(dateObser).subscribe(numberDelay => {
@@ -162,11 +162,11 @@ export class AccueilComponent implements OnInit {
     });
   }
 
-  getInfoForWarning() {
+  /*getInfoForWarning() {
     this.TrackingvehiculeService.getInfoForWarning().subscribe(numberDelay => {
       this.trackingVehicule = numberDelay;
     });
-  }
+  } */
 
 
   send() {
@@ -176,9 +176,9 @@ export class AccueilComponent implements OnInit {
     this.getCountDelayBus(this.formulaireDate.value.DateControle);
     this.getCountDelayTram(this.formulaireDate.value.DateControle);
     this.getCountDelayMetro(this.formulaireDate.value.DateControle);
-    this.getTimeDelayFrombus(this.formulaireDate.value.DateControle);
+   /* this.getTimeDelayFrombus(this.formulaireDate.value.DateControle);
     this.getTimeDelayFromMetro(this.formulaireDate.value.DateControle);
-    this.getTimeDelayFromTram(this.formulaireDate.value.DateControle);
+    this.getTimeDelayFromTram(this.formulaireDate.value.DateControle); */
   }
 
   getHour(seconds: any): number {

@@ -28,6 +28,6 @@ export type ChartOptions = {
 })
 export class BusComponent {
 
-  vehicule_type : number = 3;
+  vehicule_type : string = "Bus";
 
 }

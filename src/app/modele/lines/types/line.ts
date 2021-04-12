@@ -3,6 +3,8 @@ export interface Line {
   numberOfDelay: number ;
   //le numero de la ligne
   lineNumber: any;
+  //le nombre d'arret par line
+  countStopName : number;
 
 }
 

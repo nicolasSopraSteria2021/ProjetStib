@@ -20,7 +20,7 @@
             [labels]="chartOptions.labels"
             [responsive]="chartOptions.responsive"
         ></apx-chart>
-        Temps total de retard{{getHour(+timeDelayTram+timeDelayMetro+timeDelayBus)}}H{{getMinute(+timeDelayTram+timeDelayMetro+timeDelayBus)}}
+        {{numberDelayMetro+numberDelayBus+numberDelayTram}} retards
       </div>
       <div class="col">
           <h3>Bus</h3>
@@ -30,7 +30,7 @@
           [labels]="specificChartOptions.labels"
           [responsive]="chartOptions.responsive"
         ></apx-chart>
-        Retard {{getHour(timeDelayBus)}}H{{getMinute(timeDelayBus)}}
+          {{numberDelayBus}} retards
       </div>
       <div class="col">
         <h3>Tram</h3>
@@ -40,7 +40,7 @@
           [labels]="specificChartOptions.labels"
           [responsive]="chartOptions.responsive"
         ></apx-chart>
-        Retard {{getHour(timeDelayTram)}}H{{getMinute(timeDelayTram)}}
+        {{numberDelayTram}} retards
       </div>
 
       <div class="col">
@@ -51,7 +51,7 @@
           [labels]="specificChartOptions.labels"
           [responsive]="chartOptions.responsive"
         ></apx-chart>
-        Retard {{getHour(timeDelayMetro)}}H{{getMinute(timeDelayMetro)}}
+        {{numberDelayMetro}} retards
       </div>
   </div>
   </mat-card>
@@ -69,11 +69,11 @@
         </H3>
       </i>
     </u>
-    <div class="row"  *ngFor="let veh of trackingVehicule">
+  <!--  <div class="row"  *ngFor="let veh of trackingVehicule">
     <ul>
       <li>Ligne n°{{veh.lineNumber}} à déstination de {{veh.stationArrival.toLowerCase() | titlecase}} départ à {{veh.hourDeparture | date:'HH:mm'}}  avec {{veh.delayForecast}} de retard </li>
     </ul>
-  </div>
+  </div> -->
   </mat-card>
     </div>
   </footer>

@@ -1,12 +1,27 @@
 <div class="container">
  <div class="row">
+   <div class="col-md" align="justify">
+     <button  *ngFor="let element of YearsNumber" class="button1" (click)="changeYearsData(element)">
+      <p > Année - {{element}} </p>
+     </button>
+   </div>
+ </div>
+  <div class="row">
   <div class="col-md">
-    <mat-card>
-      Selectionnez la ligne :  <select [(ngModel)]="selectedOption">
+    <mat-card style="overflow:scroll; width: 500px; height: 250px;">
+      Selectionnez la ligne :  <select [(ngModel)]="selectedOptionLine">
+      <option>Selectionnez la ligne</option>
       <option *ngFor="let element of NumberOfLine"[value]="element">
         Ligne - {{element}}
       </option>
     </select>
+      <br/>
+      Selectionnez le mois :  <select [(ngModel)]="selectedOptionMonth">
+      <option *ngFor="let element of monthNumber"[value]="element">
+         {{element}}
+      </option>
+    </select>
+
       <button (click)=executeForm()>Confirmer</button>
       <table  mat-table [dataSource]="dataSourceLine">
 
@@ -48,12 +63,12 @@
       <mat-card>
         <h3>Carte d'identité de la ligne la plus en retard </h3>
         <br> Numéro de la ligne : {{trackingLine.lineNumber}}
-        <br> Départ :  {{trackingLine.stationDeparture.toLowerCase() | titlecase}}
-        <br> Destination : {{trackingLine.stationArrival.toLowerCase() | titlecase}}
+        <br> Destination :  {{trackingLine.stationDeparture.toLowerCase() | titlecase}}
+        <br> Nombre de retard :  {{trackingLine.delayForecast}}
       </mat-card>
     </div>
-    <div class="col">
-      <mat-card>
+    <div class="col" >
+      <mat-card style="overflow:scroll; width: 500px; height: 250px;">
         <table  mat-table [dataSource]="dataSource">
 
           <ng-container matColumnDef="count">
