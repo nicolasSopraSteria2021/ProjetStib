@@ -2,6 +2,7 @@ import {Observable} from 'rxjs';
 import {Line} from '../types/line';
 import {TrackingVehiculeForTable} from '../../TrackingVehicule/types/tracking-vehicule-for-table';
 import {LineForecast} from '../types/line-forecast';
+import {DetailsWeather} from '../types/details-weather';
 
 export interface LineRepository {
 
@@ -14,7 +15,9 @@ export interface LineRepository {
   //recupere les previsions des retards
   getForecastFromLine(lineNumber: number,vehiculeType:string,monthNumber:number): Observable<LineForecast[]>;
 
-  getMonthFromDb() : Observable<number>;
+  getMonthFromDb() : Observable<string>;
 
   getYearsFromDb() : Observable<any>;
+
+  getDetailsWeather(dateValue: string) : Observable<DetailsWeather>;
 }

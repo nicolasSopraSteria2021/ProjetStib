@@ -20,5 +20,5 @@ export interface TrackingVehiculeRepository {
   getInfoForTable(vehiculeType: string, value: any):Observable<TrackingVehiculeForTable[]>;
   //recupere les infos de la ligne la plus en retard
   GetInfoForMostDelay(vehiculeType: string, value: any) : Observable<InfoMostDelay>;
-
+  getDayByMonth(vehiculeType: string, value: any,monthValue : any): Observable<TrackingVehiculeForTable[]>;
 }

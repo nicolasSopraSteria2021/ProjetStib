@@ -1,14 +1,14 @@
 <div class="container">
- <div class="row">
-   <div class="col-md" align="justify">
-     <button  *ngFor="let element of YearsNumber" class="button1" (click)="changeYearsData(element)">
-      <p > Année - {{element}} </p>
-     </button>
-   </div>
- </div>
+  <div class="row">
+    <div class="col-md" align="justify">
+      <button class="btn btn-outline-success btn-sm" *ngFor="let element of YearsNumber" (click)="changeYearsData(element)">
+        <p> {{element}} </p>
+      </button>
+    </div>
+  </div>
   <div class="row">
   <div class="col-md">
-    <mat-card style="overflow:scroll; width: 500px; height: 250px;">
+    <mat-card>
       Selectionnez la ligne :  <select [(ngModel)]="selectedOptionLine">
       <option>Selectionnez la ligne</option>
       <option *ngFor="let element of NumberOfLine"[value]="element">
@@ -21,70 +21,107 @@
          {{element}}
       </option>
     </select>
-
       <button (click)=executeForm()>Confirmer</button>
-      <table  mat-table [dataSource]="dataSourceLine">
+      <div>
+        <h3>Graphique représentant le  nombre de retards par heure de la ligne {{selectedOptionLine}} pour le mois de {{selectedOptionMonth}}</h3>
 
-        <ng-container matColumnDef="Heure">
-          <th mat-header-cell *matHeaderCellDef style="padding-left: 20px"> Heure</th>
-          <td mat-cell *matCellDef="let element" style="padding-left: 20px"> {{element.hourArrival}} </td>
-        </ng-container>
+        <button class="btn btn-outline-success btn-sm" (click)="ChangeParam(1,1)">
+          Précipitation neige
+        </button>
+        <button class="btn btn-outline-success btn-sm" (click)="ChangeParam(2,1)">
+          Précipitation pluie
+        </button>
+        <button class="btn btn-outline-success btn-sm" (click)="ChangeParam(3,1)">
+          Visibilité
+        </button>
+        <button class="btn btn-outline-success btn-sm" (click)="ChangeParam(4,1)">
+          Vitesse Vent
+        </button>
+        <button class="btn btn-outline-success btn-sm" (click)="ChangeParam(5,1)">
+          Pas de paramètre
+        </button>
+        <canvas baseChart
+                [datasets]="dataChartSetHour"
+                [labels]="LabelForecastChart"
+                [options]="lineChartOptions"
+                [legend]="chartLegend"
+                [chartType]="ChartTypeMixed">
+        </canvas>
 
-        <ng-container matColumnDef="Retards">
-          <th mat-header-cell *matHeaderCellDef style="padding-left: 20px">Temps de retards</th>
-          <td mat-cell *matCellDef="let element" style="padding-left: 20px"> {{element.delayForecast}} </td>
-        </ng-container>
-
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumnsLineChart"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumnsLineChart;"></tr>
-      </table>
+      </div>
     </mat-card>
   </div>
    <div class="col-md">
      <mat-card>
-
        <div class="chart-wrapper">
-         <h3>Graphique des lignes les plus en retards</h3>
+         <h3>{{lineGraphTitle}}</h3>
          <canvas baseChart
-                 [data]="CountDelayForChart"
+                 [datasets]="countDelayByLine"
                  [labels]="LineNumberForChart"
-                 [options]="barChartOptions"
-                 [plugins]="barChartPlugins"
-                 [legend]="barChartLegend"
+                 [options]="chartOptions"
+                 [legend]="chartLegend"
                  [chartType]="barChartType">
          </canvas>
+        <div class="text">
+         <h3>Carte d'identité de la ligne la plus en retard pour l'année {{years}}
+         <br>Numéro de la ligne : {{lineMostDelay.lineNumber}}
+         <br> Destination :  {{lineMostDelay.stationDeparture.toLowerCase() | titlecase}}
+         <br> Nombre de retard :  {{lineMostDelay.delayForecast}}</h3>
+        </div>
        </div>
      </mat-card>
   </div>
   </div>
   <div class="row">
-    <div class="col">
+    <div class="col col-md" >
       <mat-card>
-        <h3>Carte d'identité de la ligne la plus en retard </h3>
-        <br> Numéro de la ligne : {{trackingLine.lineNumber}}
-        <br> Destination :  {{trackingLine.stationDeparture.toLowerCase() | titlecase}}
-        <br> Nombre de retard :  {{trackingLine.delayForecast}}
+        <h3>{{yearGraphTitle}}</h3>
+          <canvas baseChart
+                  [datasets]="dataMonthCharset"
+                  [labels]="labelLinear"
+                  [options]="chartOptions"
+                  [legend]="chartLegend"
+                  [chartType]="barChartType"
+                  (chartClick)="chartClicked($event)">
+          </canvas>
       </mat-card>
     </div>
-    <div class="col" >
-      <mat-card style="overflow:scroll; width: 500px; height: 250px;">
-        <table  mat-table [dataSource]="dataSource">
-
-          <ng-container matColumnDef="count">
-            <th mat-header-cell *matHeaderCellDef> Nombre de retard </th>
-            <td mat-cell *matCellDef="let element"> {{element.count}} </td>
-          </ng-container>
-
-          <ng-container matColumnDef="dateObs">
-            <th mat-header-cell *matHeaderCellDef>Date </th>
-            <td mat-cell *matCellDef="let element"> {{element.dateObservation}} </td>
-          </ng-container>
-
-
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        </table>
+    <div class="col col-md">
+      <mat-card>
+        <h3>{{monthGraphTitle}}</h3>
+        <button class="btn btn-outline-success" (click)="ChangeParam(1,2)">
+          Précipitation neige
+        </button>
+        <button class="btn btn-outline-success" (click)="ChangeParam(2,2)">
+          Précipitation pluie
+        </button>
+        <button class="btn btn-outline-success" (click)="ChangeParam(3,2)">
+          Visibilité
+        </button>
+        <button class="btn btn-outline-success" (click)="ChangeParam(4,2)">
+          Vitesse Vent
+        </button>
+        <canvas baseChart
+                [datasets]="dataDayCharset"
+                [labels]="labelDay"
+                [options]="lineChartOptions"
+                [legend]="chartLegend"
+                [chartType]="ChartTypeMixed"
+                (chartClick)="specificChartClicked($event)">
+        </canvas>
+      </mat-card>
+    </div>
+    </div>
+  <div class="row">
+    <div class="col col-md"*ngIf="bool">
+      <mat-card>
+        <h3>{{weatherGraphTitle}}</h3>
+        <canvas baseChart
+                [datasets]="pieChartDataSet"
+                [options]="chartOptionsRadar"
+                [labels]="pieChartLabels"
+                [chartType]="pieChartType">
+        </canvas>
       </mat-card>
     </div>
   </div>

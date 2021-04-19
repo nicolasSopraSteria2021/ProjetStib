@@ -33,22 +33,9 @@ export class NavComponent implements OnInit {
   changeBus():void{
     this.value_page = this.bus_p;
   }
-  changeTram():void{
-    this.value_page = this.tram_p;
-  }
-  changeMetro():void{
-    this.value_page = this.metro_p;
-  }
-  changeTable() {
-    this.value_page = "Tableau général";
-  }
 
   ngOnInit(): void {
 
   }
-  //ferme la togleSidebar si elle est ouverte et inversemment
-  toggleSidebar() {
-    this.opened=!this.opened;
 
-  }
 }

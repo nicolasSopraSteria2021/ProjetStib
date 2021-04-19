@@ -1,4 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
+import {LineService} from '../../../modele/lines/repository/line.service';
 import {ChartComponent} from 'ng-apexcharts';
 
 import {
@@ -9,6 +10,8 @@ import {
 import {TrackingVehiculeService} from '../../../modele/TrackingVehicule/repository/tracking-vehicule.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {TrackingVehiculeList} from '../../../modele/TrackingVehicule/types/trackingVehicule';
+import {ChartDataSets, ChartType} from 'chart.js';
+import {LineForecast} from '../../../modele/lines/types/line-forecast';
 
 
 export type ChartOptions = {
@@ -32,9 +35,7 @@ export class AccueilComponent implements OnInit {
   @ViewChild("specifiqueChart") specificChart: ChartComponent;
   public specificChartOptions: Partial<ChartOptions>;
 
-  timeDelayBus: number = 0;
-  timeDelayTram: number = 0;
-  timeDelayMetro: number = 0;
+
   numberDelayBus: number = 0;
   numberDelayTram: number = 0;
   numberDelayMetro: number = 0;
@@ -43,17 +44,39 @@ export class AccueilComponent implements OnInit {
   numberNotDelayBus: number = 0;
   trackingVehicule: TrackingVehiculeList = [];
 
+  titlePieChart='Nombre de retard depuis le 2021-01-01';
+  bool : boolean= true;
+  //linear chart
+  barChartLegend = true;
+  barChartPlugins = [];
+  barChartType: ChartType = 'line';
+  //DataForecast
+  DataForecastChart: number[]=[];
+  DataPrediction: number[]=[];
+  LabelForecastChart: string[];
+  dataForecast : LineForecast[]= [];
+
+  public linearChartData: ChartDataSets[]=[];
+
   formulaireDate: FormGroup = this.fb.group({
     DateControle: ["", Validators.required]
   });
 
-  constructor(private TrackingvehiculeService: TrackingVehiculeService, private fb: FormBuilder) {
+
+  constructor(private TrackingvehiculeService: TrackingVehiculeService, private fb: FormBuilder,private LineService : LineService) {
 
   }
 
+
   ngOnInit(): void {
     this.setGraphic();
-    //this.getInfoForWarning();
+    this.getForecastFromLine(13,"Jan 2021");
+    this.getCountNotDelayBus('2021-01-01');
+    this.getCountNotDelayTram('2021-01-01');
+    this.getCountNotDelayMetro('2021-01-01');
+    this.getCountDelayBus('2021-01-01');
+    this.getCountDelayTram('2021-01-01');
+    this.getCountDelayMetro('2021-01-01');
   }
 
   setGraphic() {
@@ -122,27 +145,6 @@ export class AccueilComponent implements OnInit {
     });
   }
 
- /* getTimeDelayFrombus(dateOb: string) {
-
-    this.TrackingvehiculeService.getTimeDelayFromBus(dateOb).subscribe(timeDelay => {
-      this.timeDelayBus = timeDelay;
-    });
-
-  }
-
-  getTimeDelayFromMetro(dateOb: string) {
-    this.TrackingvehiculeService.getTimeDelayFromMetro(dateOb).subscribe(timeDelay => {
-      this.timeDelayMetro = timeDelay;
-    });
-  }
-
-  getTimeDelayFromTram(dateOb: string) {
-
-    this.TrackingvehiculeService.getTimeDelayFromTram(dateOb).subscribe(timeDelay => {
-      this.timeDelayTram = timeDelay;
-    });
-  }
-*/
   //NOT DELAY
   getCountNotDelayBus(dateObser: string) {
     this.TrackingvehiculeService.getCountNotDelayFromBus(dateObser).subscribe(numberDelay => {
@@ -162,13 +164,26 @@ export class AccueilComponent implements OnInit {
     });
   }
 
-  /*getInfoForWarning() {
-    this.TrackingvehiculeService.getInfoForWarning().subscribe(numberDelay => {
-      this.trackingVehicule = numberDelay;
-    });
-  } */
+  //recupere les previsions des retards en fonction de la ligne donnée
+  getForecastFromLine(selectedOptionLine : any, selectedOptionMonth){
+    this.LineService.getForecastFromLine(selectedOptionLine,"Bus",selectedOptionMonth).subscribe(
+      forecast => {
+        this.dataForecast =forecast;
+        this.DataForecastChart = [...this.dataForecast.map(data=>data.delayForecast)];
+        this.LabelForecastChart = [...this.dataForecast.map(data=>data.hourArrival)];
+        this.DataPrediction = [...this.dataForecast.map(data=>data.prediction)];
+        this.linearChartData=[
+          {
+            data : this.DataForecastChart,label : 'Données réelles'
+          },
+          {
+            data : this.DataPrediction,label : 'Données de predictions'
+          }
 
-
+        ];
+        this.LabelForecastChart = this.dataForecast.map(dataTmp=>dataTmp.hourArrival);
+      });
+  }
   send() {
     this.getCountNotDelayBus(this.formulaireDate.value.DateControle);
     this.getCountNotDelayTram(this.formulaireDate.value.DateControle);
@@ -176,19 +191,15 @@ export class AccueilComponent implements OnInit {
     this.getCountDelayBus(this.formulaireDate.value.DateControle);
     this.getCountDelayTram(this.formulaireDate.value.DateControle);
     this.getCountDelayMetro(this.formulaireDate.value.DateControle);
-   /* this.getTimeDelayFrombus(this.formulaireDate.value.DateControle);
-    this.getTimeDelayFromMetro(this.formulaireDate.value.DateControle);
-    this.getTimeDelayFromTram(this.formulaireDate.value.DateControle); */
+
+  }
+  public chartClicked(e: any): void {
+    console.log(e);
   }
 
-  getHour(seconds: any): number {
-    let hours = (Math.floor(seconds / 3600));
-    return hours;
-  }
 
-  getMinute(seconds: any): number {
-    let minutes = Math.floor(seconds / 60) - this.getHour(seconds) * 60;
-    return minutes;
+  toggle() {
+    this.bool=false;
   }
 }
 

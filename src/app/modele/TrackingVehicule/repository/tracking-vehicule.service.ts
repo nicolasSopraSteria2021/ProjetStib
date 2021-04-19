@@ -54,4 +54,9 @@ export class TrackingVehiculeService implements TrackingVehiculeRepository{
   GetInfoForMostDelay(vehiculeType: string, value: any): Observable<InfoMostDelay> {
     return this.http.get<InfoMostDelay>(TrackingVehiculeService.URL+'/InfoMostDelay/'+vehiculeType+'/'+value);
   }
+
+  //recupere la date et le nombre de retard en fonction du type de données
+  getDayByMonth(vehiculeType: string, value: any,monthValue : any): Observable<TrackingVehiculeForTable[]> {
+    return this.http.get<TrackingVehiculeForTable[]>(TrackingVehiculeService.URL+'/specificMonth/'+vehiculeType+'/'+value+'/'+monthValue);
+  }
 }

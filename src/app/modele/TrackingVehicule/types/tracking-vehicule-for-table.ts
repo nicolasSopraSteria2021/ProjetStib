@@ -4,4 +4,14 @@ export interface TrackingVehiculeForTable {
   //date à laquelle le nombre de retard a été fait
   dateObservation : string;
 
+  snow : any;
+
+  relativeHumidity : any;
+
+  windSpeed : any;
+
+  precip: any;
+
+  visibility: any;
+
 }
