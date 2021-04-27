@@ -12,6 +12,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {TrackingVehiculeList} from '../../../modele/TrackingVehicule/types/trackingVehicule';
 import {ChartDataSets, ChartType} from 'chart.js';
 import {LineForecast} from '../../../modele/lines/types/line-forecast';
+import {DateValidator} from '../../../utile/DateValidator';
 
 
 export type ChartOptions = {
@@ -44,7 +45,7 @@ export class AccueilComponent implements OnInit {
   numberNotDelayBus: number = 0;
   trackingVehicule: TrackingVehiculeList = [];
 
-  titlePieChart='Nombre de retard depuis le 2021-01-01';
+  titlePieChart='Nombre de retards depuis le 2021-01-01';
   bool : boolean= true;
   //linear chart
   barChartLegend = true;
@@ -59,7 +60,7 @@ export class AccueilComponent implements OnInit {
   public linearChartData: ChartDataSets[]=[];
 
   formulaireDate: FormGroup = this.fb.group({
-    DateControle: ["", Validators.required]
+    DateControle:['', Validators.compose([Validators.required, DateValidator.dateValidator])],
   });
 
 
@@ -70,7 +71,7 @@ export class AccueilComponent implements OnInit {
 
   ngOnInit(): void {
     this.setGraphic();
-    this.getForecastFromLine(13,"Jan 2021");
+
     this.getCountNotDelayBus('2021-01-01');
     this.getCountNotDelayTram('2021-01-01');
     this.getCountNotDelayMetro('2021-01-01');
@@ -107,7 +108,7 @@ export class AccueilComponent implements OnInit {
         width: 250,
         type: "pie"
       },
-      labels: ['Retard', 'Non Retard'],
+      labels: ['Retard','Non Retard'],
       responsive: [
         {
           breakpoint: 20,
@@ -164,26 +165,6 @@ export class AccueilComponent implements OnInit {
     });
   }
 
-  //recupere les previsions des retards en fonction de la ligne donnée
-  getForecastFromLine(selectedOptionLine : any, selectedOptionMonth){
-    this.LineService.getForecastFromLine(selectedOptionLine,"Bus",selectedOptionMonth).subscribe(
-      forecast => {
-        this.dataForecast =forecast;
-        this.DataForecastChart = [...this.dataForecast.map(data=>data.delayForecast)];
-        this.LabelForecastChart = [...this.dataForecast.map(data=>data.hourArrival)];
-        this.DataPrediction = [...this.dataForecast.map(data=>data.prediction)];
-        this.linearChartData=[
-          {
-            data : this.DataForecastChart,label : 'Données réelles'
-          },
-          {
-            data : this.DataPrediction,label : 'Données de predictions'
-          }
-
-        ];
-        this.LabelForecastChart = this.dataForecast.map(dataTmp=>dataTmp.hourArrival);
-      });
-  }
   send() {
     this.getCountNotDelayBus(this.formulaireDate.value.DateControle);
     this.getCountNotDelayTram(this.formulaireDate.value.DateControle);
@@ -193,14 +174,7 @@ export class AccueilComponent implements OnInit {
     this.getCountDelayMetro(this.formulaireDate.value.DateControle);
 
   }
-  public chartClicked(e: any): void {
-    console.log(e);
-  }
 
-
-  toggle() {
-    this.bool=false;
-  }
 }
 
 

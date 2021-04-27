@@ -3,12 +3,12 @@
   font-size: 75%;
   margin-left: 3%;
 }
-h3{
+h4{
   text-align: center;
 }
 .col-md{
   overflow: auto;
 }
-.text{
-  text-align: justify;
+h3{
+  text-align: center;
 }

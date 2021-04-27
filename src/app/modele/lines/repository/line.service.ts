@@ -15,7 +15,7 @@ export class LineService implements  LineRepository{
   //la page specifique est chargée
 
 //constante definissant l'URL
-  static readonly URL : string = environment.serverAddress+'/vehicule';
+  static readonly URL : string = environment.serverAddress+'/line';
 
   constructor(private http:HttpClient) { }
 
@@ -40,7 +40,7 @@ export class LineService implements  LineRepository{
     return this.http.get<number>(LineService.URL+'/years');
   }
 
-  getDetailsWeather(dateValue: string): Observable<DetailsWeather>{
-    return this.http.get<DetailsWeather>(LineService.URL+'/detailsWeather/'+dateValue);
+  getDetailsWeather(dateValue: string,vehiculeType:string): Observable<DetailsWeather>{
+    return this.http.get<DetailsWeather>(LineService.URL+'/detailsWeather/'+dateValue+'/'+vehiculeType);
   }
 }

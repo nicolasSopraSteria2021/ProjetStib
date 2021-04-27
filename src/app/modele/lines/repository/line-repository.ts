@@ -19,5 +19,5 @@ export interface LineRepository {
 
   getYearsFromDb() : Observable<any>;
 
-  getDetailsWeather(dateValue: string) : Observable<DetailsWeather>;
+  getDetailsWeather(dateValue: string,vehiculeType:string) : Observable<DetailsWeather>;
 }

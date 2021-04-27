@@ -4,16 +4,16 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
 <div class="container">
   <div class="row">
-    <form [formGroup]="formulaireDate" (ngSubmit)="send()" (change)="toggle()">
+    <form [formGroup]="formulaireDate" (ngSubmit)="send()">
       Entrer une date antérieur :
       <input type="text" id="dateStart" formControlName="DateControle" placeholder="YYYY-MM-DD">
-      <input type="submit" [disabled]="formulaireDate.invalid">
+      <input type="submit"  [disabled]="formulaireDate.invalid">
     </form>
   </div>
   <mat-card>
     <div class="row">
       <h4 *ngIf="bool">{{titlePieChart}}</h4>
-      <h4 *ngIf="!bool">Nombre de retard depuis le {{formulaireDate.value.DateControle}}</h4>
+      <h4 *ngIf="!bool">Proportion de retards depuis le {{formulaireDate.value.DateControle}}</h4>
       <div class="col">
         <apx-chart
             [series]=[numberDelayMetro,numberDelayBus,numberDelayTram]
@@ -43,20 +43,9 @@
         ></apx-chart>
         {{numberDelayTram}} retards
       </div>
-
-      <div class="col">
-        <h3>Metro</h3>
-        <apx-chart
-          [series]=[numberDelayMetro,numberNotDelayMetro]
-          [chart]="specificChartOptions.chart"
-          [labels]="specificChartOptions.labels"
-          [responsive]="chartOptions.responsive"
-        ></apx-chart>
-        {{numberDelayMetro}} retards
-      </div>
   </div>
+    <router-outlet></router-outlet>
   </mat-card>
-  <br>
 </div>
 
 

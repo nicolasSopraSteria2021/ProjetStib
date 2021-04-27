@@ -12,7 +12,6 @@ import { BusComponent } from './View/vehicule/bus/bus.component';
 import { MetroComponent } from './View/vehicule/metro/metro.component';
 import { TramComponent } from './View/vehicule/tram/tram.component';
 import { AccueilComponent } from './View/commons/accueil/accueil.component';
-import { TableInfComponent } from './View/TableInformation/table-inf/table-inf.component';
 import {SidebarModule} from 'ng-sidebar';
 import { NgApexchartsModule } from "ng-apexcharts";
 import {MatTableModule} from '@angular/material/table';
@@ -34,7 +33,6 @@ import {ChartsModule} from 'ng2-charts';
     MetroComponent,
     TramComponent,
     AccueilComponent,
-    TableInfComponent,
     GraphiquesComponent
 
 

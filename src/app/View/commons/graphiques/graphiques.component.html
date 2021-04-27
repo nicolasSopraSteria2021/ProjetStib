@@ -9,27 +9,29 @@
   <div class="row">
   <div class="col-md">
     <mat-card>
-      Selectionnez la ligne :  <select [(ngModel)]="selectedOptionLine">
+      <form [formGroup]="formulaire" (ngSubmit)="executeForm()">
+      Selectionnez la ligne :  <select [(ngModel)]="selectedOptionLine" formControlName="selectLine">
       <option>Selectionnez la ligne</option>
       <option *ngFor="let element of NumberOfLine"[value]="element">
         Ligne - {{element}}
       </option>
     </select>
       <br/>
-      Selectionnez le mois :  <select [(ngModel)]="selectedOptionMonth">
+      Selectionnez le mois :  <select [(ngModel)]="selectedOptionMonth" formControlName="selectMonth">
       <option *ngFor="let element of monthNumber"[value]="element">
          {{element}}
       </option>
     </select>
-      <button (click)=executeForm()>Confirmer</button>
+        <input type="submit" [disabled]="formulaire.invalid" class="btn btn-primary btn-sm">
+      </form>
       <div>
-        <h3>Graphique représentant le  nombre de retards par heure de la ligne {{selectedOptionLine}} pour le mois de {{selectedOptionMonth}}</h3>
+        <h4>{{hourGraphTitle}}</h4>
 
         <button class="btn btn-outline-success btn-sm" (click)="ChangeParam(1,1)">
-          Précipitation neige
+          Précipitations neige
         </button>
         <button class="btn btn-outline-success btn-sm" (click)="ChangeParam(2,1)">
-          Précipitation pluie
+          Précipitations pluie
         </button>
         <button class="btn btn-outline-success btn-sm" (click)="ChangeParam(3,1)">
           Visibilité
@@ -37,9 +39,9 @@
         <button class="btn btn-outline-success btn-sm" (click)="ChangeParam(4,1)">
           Vitesse Vent
         </button>
-        <button class="btn btn-outline-success btn-sm" (click)="ChangeParam(5,1)">
+       <!-- <button class="btn btn-outline-success btn-sm" (click)="ChangeParam(5,1)">
           Pas de paramètre
-        </button>
+        </button> -->
         <canvas baseChart
                 [datasets]="dataChartSetHour"
                 [labels]="LabelForecastChart"
@@ -73,7 +75,7 @@
   </div>
   </div>
   <div class="row">
-    <div class="col col-md" >
+ <!--   <div class="col col-md" >
       <mat-card>
         <h3>{{yearGraphTitle}}</h3>
           <canvas baseChart
@@ -85,15 +87,15 @@
                   (chartClick)="chartClicked($event)">
           </canvas>
       </mat-card>
-    </div>
+    </div> -->
     <div class="col col-md">
       <mat-card>
-        <h3>{{monthGraphTitle}}</h3>
+        <h4 class="text">{{monthGraphTitle}}</h4>
         <button class="btn btn-outline-success" (click)="ChangeParam(1,2)">
-          Précipitation neige
+          Précipitations neige
         </button>
         <button class="btn btn-outline-success" (click)="ChangeParam(2,2)">
-          Précipitation pluie
+          Précipitations pluie
         </button>
         <button class="btn btn-outline-success" (click)="ChangeParam(3,2)">
           Visibilité
@@ -111,9 +113,21 @@
         </canvas>
       </mat-card>
     </div>
-    </div>
+  <!--  </div> -->
+  <div class="col col-md">
+    <mat-card>
+      <h3>{{weatherGraphTitle}}</h3>
+      <canvas baseChart
+              [datasets]="pieChartDataSet"
+              [options]="chartOptionsRadar"
+              [legend]="chartLegendRadar"
+              [labels]="pieChartLabels"
+              [chartType]="pieChartType">
+      </canvas>
+    </mat-card>
+  </div>
   <div class="row">
-    <div class="col col-md"*ngIf="bool">
+    <!--<div class="col col-md">
       <mat-card>
         <h3>{{weatherGraphTitle}}</h3>
         <canvas baseChart
@@ -123,6 +137,7 @@
                 [chartType]="pieChartType">
         </canvas>
       </mat-card>
-    </div>
+    </div>-->
+  </div>
   </div>
 </div>
