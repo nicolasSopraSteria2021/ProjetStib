@@ -1,6 +1,6 @@
 export interface InfoMostDelay {
   //interface representant la ligne la plus en retard
-  lineNumber :any;
+  lineNumber :number;
   stationDeparture :string;
-  delayForecast : any;
+
 }

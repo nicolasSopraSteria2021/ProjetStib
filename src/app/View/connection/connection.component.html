@@ -1,0 +1,22 @@
+<h2>DashBoard STIB/TWC</h2>
+<div class="banner">
+<form [formGroup]="formLogIn" (ngSubmit)="logIn()">
+  <div class="user-box">
+    <input type="text" formControlName="name">
+    <label>
+      Name
+    </label>
+  </div>
+    <div class="user-box">
+      <input type="password" formControlName="password">
+      <label>
+        Password
+      </label>
+  </div>
+    <div class="alert alert-danger" role="alert">
+      <button type="submit" [disabled]="formLogIn.invalid">
+        Log In
+      </button>
+    </div>
+</form>
+</div>

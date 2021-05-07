@@ -1,7 +1,10 @@
 ul li{
   list-style-type: none;
 }
-col {
-
+.row {
+  text-align: center;
+}
+.row col{
+  text-align: center;
 }
 

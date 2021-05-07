@@ -7,7 +7,7 @@ import {InfoMostDelay} from '../../../modele/TrackingVehicule/types/info-most-de
 import {ChartDataSets, ChartOptions, ChartType} from 'chart.js';
 import {LineForecast} from '../../../modele/lines/types/line-forecast';
 import {Label} from 'ng2-charts';
-import {DetailsWeather} from '../../../modele/lines/types/details-weather';
+import {DetailsWeathers} from '../../../modele/lines/types/details-weathers';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
 
@@ -35,9 +35,9 @@ export class GraphiquesComponent implements OnInit {
 
   //Attribut
   @Input() vehicule_type: string;
-  lines: Line[] = [];
-  NumberOfLine: any = [];
-  lineMostDelay: InfoMostDelay;
+  lines$: Line[] = [];
+  NumberOfLine$: any = [];
+  lineMostDelay$: InfoMostDelay;
 
   monthNumber: string;
   YearsNumber: string;
@@ -75,49 +75,32 @@ export class GraphiquesComponent implements OnInit {
   chartLegendRadar =false;
   barChartType: ChartType = 'bar';
 
-  public lineChartOptions: (ChartOptions & { annotation: any }) = {
+
+  public lineChartOptions: ChartOptions  = {
+    //true = s'adapte à l'écran
     responsive: true,
     scales: {
-
-      // We use this empty structure as a placeholder for dynamic theming.
       xAxes: [{}],
       yAxes: [
         {
+          //définition de l'axe Y gauche pour les linearChart
           id: 'y-axis-0',
           position: 'left',
           ticks : {
+            //le graphique commence à 0
             beginAtZero:true
-          }
-        },
+          }},
         {
-
+          //définition de l'axe y droite pour les barCharts
           id: 'y-axis-1',
           position: 'right',
           gridLines: {
             color: 'rgba(0,255,0,0.3)',
           },
           ticks: {
-            beginAtZero:true,
+            beginAtZero: true,
             fontColor: 'green'
-          }
-        }
-      ]
-    },
-    annotation: {
-      annotations: [
-        {
-          mode: 'vertical',
-          scaleID: 'x-axis-0',
-          value: 'March',
-          borderColor: 'orange',
-          borderWidth: 2,
-          label: {
-            enabled: true,
-            fontColor: 'orange'
-          }
-        },
-      ],
-    },
+          }}]}
   };
 
   //valeur pour les select.
@@ -130,23 +113,23 @@ export class GraphiquesComponent implements OnInit {
   DataLinear: number[] = [];
   labelLinear: string[] = [];
   dataChartSetHour : ChartDataSets[]=[];
-  dataForTables: TrackingVehiculeForTable[] = [];
+  dataForTables$: TrackingVehiculeForTable[] = [];
   public dataMonthCharset: ChartDataSets[]=[];
   //graph day
   DataDay: number[] = [];
   labelDay: string[] = [];
-  DataDayChart: TrackingVehiculeForTable[] = [];
+  DataDayChart$: TrackingVehiculeForTable[] = [];
    dataDayCharset: ChartDataSets[]=[];
   ChartTypeMixed: ChartType = 'line';
 
   //DataForecast
   LabelForecastChart: string[];
-  dataForecast: LineForecast[] = [];
+  dataForecast$: LineForecast[] = [];
 //constructor et ngOnInit
   public barChartData: ChartDataSets[];
 
   //piecharts
-  dataPieChart: DetailsWeather;
+  dataPieChart$: DetailsWeathers;
   pieChartLabels: Label[] = ['Vitesse du vent (%)','Précipitation neige (%) ', 'Taux de précipitation (%) ','Température (%)','Visibilité (%)'];
 
   pieChartDataSet: ChartDataSets[] = [
@@ -176,42 +159,45 @@ export class GraphiquesComponent implements OnInit {
     this.getDetailsWeather("Feb  23 2021");
   }
 
-//methode
   //recupere les previsions des retards en fonction de la ligne donnée
   getForecastFromLine(selectedOptionLine: any, selectedOptionMonth) {
+    //appel de la méthode getForecastFromLine de LineService
     this.LineService.getForecastFromLine(selectedOptionLine, this.vehicule_type, selectedOptionMonth).subscribe(
       forecast => {
-        this.dataForecast = forecast;
+        //on recupère l'objet pour le mapping
+        this.dataForecast$ = forecast;
+        //titre du graphique avec les valeurs sélectionners
         this.hourGraphTitle =
           'Graphique représentant la moyenne des retards pour chaque heure du mois de '+selectedOptionMonth +' de la ligne '+selectedOptionLine;
-
+        //Attributions des valeurs aux dataSet du graphique
         this.dataChartSetHour=[
-
           {
-            data: this.dataForecast.map(data => data.delayForecast),label:'Nombre de retards (réels)',yAxisID: 'y-axis-0',type:'line'
+            data: this.dataForecast$.map(data => data.delayForecast),label:'Nombre de retards (réels)',yAxisID: 'y-axis-0',type:'line'
           },
           {
-            data: this.dataForecast.map(data => data.prediction), label: 'Nombre de retards (prédictions)', yAxisID: 'y-axis-0', type: 'line'
+            data: this.dataForecast$.map(data => data.prediction), label: 'Nombre de retards (prédictions)', yAxisID: 'y-axis-0', type: 'line'
           },
           {
-            data: this.dataForecast.map(data => data.precip), label: 'Précipitations pluie (mm)', yAxisID: 'y-axis-1', type: 'bar'
+            data: this.dataForecast$.map(data => data.precip), label: 'Précipitations pluie (mm)', yAxisID: 'y-axis-1', type: 'bar'
           }
           ];
-        this.LabelForecastChart = this.dataForecast.map(data => data.hourArrival);
+        //axe des X
+        this.LabelForecastChart = this.dataForecast$.map(data => data.hourArrival);
+        //changement de la couleur pour le troisième jeu de données
         this.dataChartSetHour[2].backgroundColor = `rgba(0, 255, 0, 0.3)`;
       });
   }
   getInfoForTable(value: any) {
     this.trackingService.getInfoForTable(this.vehicule_type, value).subscribe(dataTmp => {
-      this.dataForTables = dataTmp;
+      this.dataForTables$ = dataTmp;
 
-      this.labelLinear = this.dataForTables.map(dataTmp => dataTmp.dateObservation+" "+value);
+      this.labelLinear = this.dataForTables$.map(dataTmp => dataTmp.dateObservation+" "+value);
       //changement du titre pour le graphique
       this.yearGraphTitle = "Graphique représentant le nombre de retards pour l'année "+value;
       //set data du graphique
       this.dataMonthCharset = [
         {
-          data : this.dataForTables.map(data => data.count),label : 'Nombre de retards'
+          data : this.dataForTables$.map(data => data.count),label : 'Nombre de retards'
         }
       ];
     });
@@ -220,7 +206,7 @@ export class GraphiquesComponent implements OnInit {
   //recupere les infos de la ligne la plus en retards
   GetInfoForMostDelay(value: any) {
     this.trackingService.GetInfoForMostDelay(this.vehicule_type, value).subscribe(data => {
-      this.lineMostDelay = data
+      this.lineMostDelay$ = data;
     });
   }
 
@@ -228,16 +214,16 @@ export class GraphiquesComponent implements OnInit {
   getCountLineForGraph(value: any) {
     this.LineService.getLineChart(this.vehicule_type, value).subscribe(
       TmpLines => {
-        this.lines = TmpLines;
+        this.lines$ = TmpLines;
         this.countDelayByLine=[
           {
-            data :this.lines.map(line => line.delays),label : 'Nombre de retards (réels)'
+            data :this.lines$.map(line => line.delays),label : 'Nombre de retards (réels)'
           }/*,
           {
             data :this.lines.map(line => line.lineNumber),label : 'Nombre de retards (predictions)'
           } */
         ];
-        this.LineNumberForChart = this.lines.map(line => "line n°" + line.lineNumber + "-" + line.countStopName + "arrets");
+        this.LineNumberForChart = this.lines$.map(line => "line n°" + line.lineNumber + "-" + line.countStopName + "arrets");
         //this.LineNumberForChart = this.lines.map(line =>line.countStopName);
         // this.countStopName = this.lines.map(line=>line.numberOfDelay/line.countStopName);
         this.lineGraphTitle="Graphique représentant le nombre de retards en fonction des lignes pour l'année "+value
@@ -249,7 +235,7 @@ export class GraphiquesComponent implements OnInit {
     this.LineService.getLineNumberFromCategory(this.vehicule_type).subscribe
     (
       numberOfLine => {
-        this.NumberOfLine = numberOfLine;
+        this.NumberOfLine$ = numberOfLine;
       }
     );
   }
@@ -272,20 +258,20 @@ export class GraphiquesComponent implements OnInit {
   getDayByMonth(monthValue: string,selectedOptionLine:number) {
     this.trackingService.getDayByMonth(this.vehicule_type, selectedOptionLine, monthValue).subscribe(
       dataTmp => {
-        this.DataDayChart = dataTmp;
+        this.DataDayChart$ = dataTmp;
         //change le titre du graphique
         this.monthGraphTitle = 'Graphique représentant la moyenne des retards pour le mois de '+monthValue;
         //definit les données
-        this.labelDay = this.DataDayChart.map(dataTmp => dataTmp.dateObservation);
+        this.labelDay = this.DataDayChart$.map(dataTmp => dataTmp.dateObservation);
         this.dataDayCharset = [
           {
-            data: this.DataDayChart.map(data => data.count), label: 'Nombre de retards (réels)'
+            data: this.DataDayChart$.map(data => data.count), label: 'Nombre de retards (réels)'
           },
           {
-            data: this.DataDayChart.map(data => data.relativeHumidity), label: 'Nombre de retards (prédictions)'
+            data: this.DataDayChart$.map(data => data.relativeHumidity), label: 'Nombre de retards (prédictions)'
           },
           {
-            data: this.DataDayChart.map(data => data.precip), label: 'Précipitations pluies (mm)', yAxisID: 'y-axis-1', type: 'bar'
+            data: this.DataDayChart$.map(data => data.precip), label: 'Précipitations pluies (mm)', yAxisID: 'y-axis-1', type: 'bar'
           }];
         this.dataDayCharset[2].backgroundColor = `rgba(0, 255, 0, 0.3)`;
       });
@@ -306,15 +292,15 @@ export class GraphiquesComponent implements OnInit {
     this.LineService.getDetailsWeather(dateValue,this.vehicule_type).subscribe(
       tmpData => {
         this.weatherGraphTitle = 'Graphique représentant les données météo de la journée du '+ dateValue;
-        this.dataPieChart = tmpData;
+        this.dataPieChart$ = tmpData;
         this.pieChartDataSet = [
           {
             data: [
-              this.dataPieChart.windSpeed
-              ,this.dataPieChart.snow
-              , this.dataPieChart.precip
-              ,this.dataPieChart.relativeHumidity
-              , this.dataPieChart.visibility
+              this.dataPieChart$.windSpeed
+              ,this.dataPieChart$.snow
+              , this.dataPieChart$.precip
+              ,this.dataPieChart$.relativeHumidity
+              , this.dataPieChart$.visibility
             ]
           }
         ];
@@ -323,7 +309,6 @@ export class GraphiquesComponent implements OnInit {
 
   public chartClicked(e: any): void {
     console.log(this.labelLinear[e.active[0]._index]);
- //     this.getDayByMonth(this.labelLinear[e.active[0]._index],this.selectedOptionLine);
       this.showSpeficic=true;
   }
 
@@ -346,62 +331,62 @@ export class GraphiquesComponent implements OnInit {
         case 1:
           this.dataChartSetHour = [
             {
-              data: this.dataForecast.map(data => data.delayForecast), label: 'Nombre de retards'
+              data: this.dataForecast$.map(data => data.delayForecast), label: 'Nombre de retards'
             },
             {
-              data: this.dataForecast.map(data => data.prediction), label: 'Nombre de retards (prediction)',yAxisID: 'y-axis-0', type: 'line'
+              data: this.dataForecast$.map(data => data.prediction), label: 'Nombre de retards (prediction)',yAxisID: 'y-axis-0', type: 'line'
             },
             {
-              data: this.dataForecast.map(data => data.snow), label: 'Précipitations neige (mm)', yAxisID: 'y-axis-1', type: 'bar'
+              data: this.dataForecast$.map(data => data.snow), label: 'Précipitations neige (mm)', yAxisID: 'y-axis-1', type: 'bar'
             }];
           this.dataChartSetHour[2].backgroundColor = `rgba(0, 255, 0, 0.3)`;
           break;
         case 2:
           this.dataChartSetHour = [
             {
-              data:this.dataForecast.map(data => data.delayForecast), label: 'Nombre de retards'
+              data:this.dataForecast$.map(data => data.delayForecast), label: 'Nombre de retards'
             },
             {
-              data: this.dataForecast.map(data => data.prediction), label: 'Nombre de retards (prediction)',yAxisID: 'y-axis-0', type: 'line'
+              data: this.dataForecast$.map(data => data.prediction), label: 'Nombre de retards (prediction)',yAxisID: 'y-axis-0', type: 'line'
             },
             {
-              data: this.dataForecast.map(data => data.precip), label: 'Précipitations pluie (mm)', yAxisID: 'y-axis-1', type: 'bar'
+              data: this.dataForecast$.map(data => data.precip), label: 'Précipitations pluie (mm)', yAxisID: 'y-axis-1', type: 'bar'
             }];
           this.dataChartSetHour[2].backgroundColor = `rgba(0, 255, 0, 0.3)`;
           break;
         case 3:
           this.dataChartSetHour = [
             {
-              data: this.dataForecast.map(data => data.delayForecast), label: 'Nombre de retards'
+              data: this.dataForecast$.map(data => data.delayForecast), label: 'Nombre de retards'
             },
             {
-              data: this.dataForecast.map(data => data.prediction), label: 'Nombre de retards (prediction)',yAxisID: 'y-axis-0', type: 'line'
+              data: this.dataForecast$.map(data => data.prediction), label: 'Nombre de retards (prediction)',yAxisID: 'y-axis-0', type: 'line'
             },
             {
-              data: this.dataForecast.map(data => data.visibility), label: 'Niveau de visibilité (Km)', yAxisID: 'y-axis-1', type: 'bar'
+              data: this.dataForecast$.map(data => data.visibility), label: 'Niveau de visibilité (m)', yAxisID: 'y-axis-1', type: 'bar'
             }];
           this.dataChartSetHour[2].backgroundColor = `rgba(0, 255, 0, 0.3)`;
           break;
         case 4:
           this.dataChartSetHour = [
             {
-              data:  this.dataForecast.map(data => data.delayForecast), label: 'Nombre de retards'
+              data:  this.dataForecast$.map(data => data.delayForecast), label: 'Nombre de retards'
             },
             {
-              data: this.dataForecast.map(data => data.prediction), label: 'Nombre de retards (prediction)',yAxisID: 'y-axis-0', type: 'line'
+              data: this.dataForecast$.map(data => data.prediction), label: 'Nombre de retards (prediction)',yAxisID: 'y-axis-0', type: 'line'
             },
             {
-              data: this.dataForecast.map(data => data.windSpeed), label: 'Vitesse du vent (km/h)', yAxisID: 'y-axis-1', type: 'bar'
+              data: this.dataForecast$.map(data => data.windSpeed), label: 'Vitesse du vent (km/h)', yAxisID: 'y-axis-1', type: 'bar'
             }];
           this.dataChartSetHour[2].backgroundColor = `rgba(0, 255, 0, 0.3)`;
           break;
         case 5:
           this.dataChartSetHour = [
             {
-              data:  this.dataForecast.map(data => data.delayForecast), label: 'Nombre de retards',yAxisID: 'y-axis-0', type: 'bar'
+              data:  this.dataForecast$.map(data => data.delayForecast), label: 'Nombre de retards',yAxisID: 'y-axis-0', type: 'bar'
             },
             {
-              data: this.dataForecast.map(data => data.prediction), label: 'Nombre de retards (prédictions)', yAxisID: 'y-axis-0', type: 'bar'
+              data: this.dataForecast$.map(data => data.prediction), label: 'Nombre de retards (prédictions)', yAxisID: 'y-axis-0', type: 'bar'
             },
             ];
           this.dataChartSetHour[2].backgroundColor = `rgba(0, 255, 0, 0.3)`;
@@ -414,52 +399,52 @@ export class GraphiquesComponent implements OnInit {
         case 1:
           this.dataDayCharset = [
             {
-              data: this.DataDay = this.DataDayChart.map(data => data.count), label: 'Nombre de retards'
+              data: this.DataDay = this.DataDayChart$.map(data => data.count), label: 'Nombre de retards'
             },
             {
-              data: this.DataDayChart.map(data => data.relativeHumidity), label: 'Nombre de retards (prédictions)'
+              data: this.DataDayChart$.map(data => data.relativeHumidity), label: 'Nombre de retards (prédictions)'
             },
             {
-              data: this.DataDayChart.map(data => data.snow), label: 'Précipitation neige (mm)', yAxisID: 'y-axis-1', type: 'bar'
+              data: this.DataDayChart$.map(data => data.snow), label: 'Précipitation neige (mm)', yAxisID: 'y-axis-1', type: 'bar'
             }];
           this.dataDayCharset[2].backgroundColor = `rgba(0, 255, 0, 0.3)`;
           break;
         case 2:
           this.dataDayCharset = [
             {
-              data: this.DataDay = this.DataDayChart.map(data => data.count), label: 'Nombre de retard'
+              data: this.DataDay = this.DataDayChart$.map(data => data.count), label: 'Nombre de retard'
             },
             {
-              data: this.DataDayChart.map(data => data.relativeHumidity), label: 'Nombre de retard (prediction)'
+              data: this.DataDayChart$.map(data => data.relativeHumidity), label: 'Nombre de retard (prediction)'
             },
             {
-              data: this.DataDayChart.map(data => data.precip), label: 'Précipitations pluie (mm)', yAxisID: 'y-axis-1', type: 'bar'
+              data: this.DataDayChart$.map(data => data.precip), label: 'Précipitations pluie (mm)', yAxisID: 'y-axis-1', type: 'bar'
             }];
           this.dataDayCharset[2].backgroundColor = `rgba(0, 255, 0, 0.3)`;
           break;
         case 3:
           this.dataDayCharset = [
             {
-              data: this.DataDay = this.DataDayChart.map(data => data.count), label: 'Nombre de retards'
+              data: this.DataDay = this.DataDayChart$.map(data => data.count), label: 'Nombre de retards'
             },
             {
-              data: this.DataDayChart.map(data => data.relativeHumidity), label: 'Nombre de retards (predictions)'
+              data: this.DataDayChart$.map(data => data.relativeHumidity), label: 'Nombre de retards (predictions)'
             },
             {
-              data: this.DataDayChart.map(data => data.visibility), label: 'Niveau de visibilité (Km)', yAxisID: 'y-axis-1', type: 'bar'
+              data: this.DataDayChart$.map(data => data.visibility), label: 'Niveau de visibilité (m)', yAxisID: 'y-axis-1', type: 'bar'
             }];
           this.dataDayCharset[2].backgroundColor = `rgba(0, 255, 0, 0.3)`;
           break;
         case 4:
           this.dataDayCharset = [
             {
-              data: this.DataDay = this.DataDayChart.map(data => data.count), label: 'Nombre de retards'
+              data: this.DataDay = this.DataDayChart$.map(data => data.count), label: 'Nombre de retards'
             },
             {
-              data: this.DataDayChart.map(data => data.relativeHumidity), label: 'Nombre de retards (prédictions)'
+              data: this.DataDayChart$.map(data => data.relativeHumidity), label: 'Nombre de retards (prédictions)'
             },
             {
-              data: this.DataDayChart.map(data => data.windSpeed), label: 'Vitesse du vent (km/h)', yAxisID: 'y-axis-1', type: 'bar'
+              data: this.DataDayChart$.map(data => data.windSpeed), label: 'Vitesse du vent (km/h)', yAxisID: 'y-axis-1', type: 'bar'
             }];
           this.dataDayCharset[2].backgroundColor = `rgba(0, 255, 0, 0.3)`;
           break;

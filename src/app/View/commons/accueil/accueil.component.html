@@ -12,35 +12,38 @@
   </div>
   <mat-card>
     <div class="row">
-      <h4 *ngIf="bool">{{titlePieChart}}</h4>
-      <h4 *ngIf="!bool">Proportion de retards depuis le {{formulaireDate.value.DateControle}}</h4>
       <div class="col">
-        <apx-chart
-            [series]=[numberDelayMetro,numberDelayBus,numberDelayTram]
-            [chart]="chartOptions.chart"
-            [labels]="chartOptions.labels"
-            [responsive]="chartOptions.responsive"
-        ></apx-chart>
-        {{numberDelayMetro+numberDelayBus+numberDelayTram}} retards
+        <h4 *ngIf="bool">{{titlePieChart}}</h4>
+        <h4 *ngIf="!bool">Proportion de retards depuis le {{formulaireDate.value.DateControle}}</h4>
+        <canvas baseChart
+                [data]=[numberDelayBus,numberDelayTram]
+                [labels]="labels"
+                [options]="chartOptions"
+                [legend]="chartLegend"
+                [chartType]="barChartType">
+        </canvas>
+        {{numberDelayBus+numberDelayTram}} retards
       </div>
       <div class="col">
           <h3>Bus</h3>
-           <apx-chart
-          [series]=[numberDelayBus,numberNotDelayBus]
-          [chart]="specificChartOptions.chart"
-          [labels]="specificChartOptions.labels"
-          [responsive]="chartOptions.responsive"
-        ></apx-chart>
+        <canvas baseChart
+                [data]=[numberDelayBus,numberNotDelayBus]
+                [labels]="labelsSpecific"
+                [options]="chartOptions"
+                [legend]="chartLegend"
+                [chartType]="barChartType">
+        </canvas>
           {{numberDelayBus}} retards
       </div>
       <div class="col">
         <h3>Tram</h3>
-        <apx-chart
-          [series]=[numberDelayTram,numberNotDelayTram]
-          [chart]="specificChartOptions.chart"
-          [labels]="specificChartOptions.labels"
-          [responsive]="chartOptions.responsive"
-        ></apx-chart>
+        <canvas baseChart
+                [data]=[numberDelayTram,numberNotDelayTram]
+                [labels]="labelsSpecific"
+                [options]="chartOptions"
+                [legend]="chartLegend"
+                [chartType]="barChartType">
+        </canvas>
         {{numberDelayTram}} retards
       </div>
   </div>

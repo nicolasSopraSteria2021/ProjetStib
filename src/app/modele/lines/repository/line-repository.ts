@@ -2,7 +2,7 @@ import {Observable} from 'rxjs';
 import {Line} from '../types/line';
 import {TrackingVehiculeForTable} from '../../TrackingVehicule/types/tracking-vehicule-for-table';
 import {LineForecast} from '../types/line-forecast';
-import {DetailsWeather} from '../types/details-weather';
+import {DetailsWeathers} from '../types/details-weathers';
 
 export interface LineRepository {
 
@@ -19,5 +19,5 @@ export interface LineRepository {
 
   getYearsFromDb() : Observable<any>;
 
-  getDetailsWeather(dateValue: string,vehiculeType:string) : Observable<DetailsWeather>;
+  getDetailsWeather(dateValue: string,vehiculeType:string) : Observable<DetailsWeathers>;
 }

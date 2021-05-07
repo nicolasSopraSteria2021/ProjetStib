@@ -5,7 +5,7 @@ import {Line} from '../types/line';
 import {environment} from '../../../../environments/environment';
 import {HttpClient} from '@angular/common/http';
 import {LineForecast} from '../types/line-forecast';
-import {DetailsWeather} from '../types/details-weather';
+import {DetailsWeathers} from '../types/details-weathers';
 
 @Injectable({
   providedIn: 'root'
@@ -40,7 +40,7 @@ export class LineService implements  LineRepository{
     return this.http.get<number>(LineService.URL+'/years');
   }
 
-  getDetailsWeather(dateValue: string,vehiculeType:string): Observable<DetailsWeather>{
-    return this.http.get<DetailsWeather>(LineService.URL+'/detailsWeather/'+dateValue+'/'+vehiculeType);
+  getDetailsWeather(dateValue: string,vehiculeType:string): Observable<DetailsWeathers>{
+    return this.http.get<DetailsWeathers>(LineService.URL+'/detailsWeather/'+dateValue+'/'+vehiculeType);
   }
 }

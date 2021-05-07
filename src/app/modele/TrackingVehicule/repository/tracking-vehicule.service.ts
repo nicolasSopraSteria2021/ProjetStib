@@ -12,7 +12,7 @@ import {InfoMostDelay} from '../types/info-most-delay';
 })
 export class TrackingVehiculeService implements TrackingVehiculeRepository{
 
-  static readonly URL : string = environment.serverAddress+'/trackingVehicule';
+  static readonly URL : string = environment.serverAddress+'/line';
 
   constructor(private http:HttpClient) { }
 
@@ -41,11 +41,6 @@ export class TrackingVehiculeService implements TrackingVehiculeRepository{
     return this.http.get<number>(TrackingVehiculeService.URL+'/notDelayTram/'+dateObs);
   }
 
-
-//recupere les infos de tout les vehicules en retards
-  /*getInfoForWarning(): Observable<TrackingVehiculeList> {
-    return this.http.get<TrackingVehiculeList>(TrackingVehiculeService.URL+'/InfoWaring');
-  } */
   //recupere la date et le nombre de retard en fonction du type de données
   getInfoForTable(vehiculeType: string, value: any): Observable<TrackingVehiculeForTable[]> {
     return this.http.get<TrackingVehiculeForTable[]>(TrackingVehiculeService.URL+'/InfoTable/'+vehiculeType+'/'+value);
